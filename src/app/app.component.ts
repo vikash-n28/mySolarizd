@@ -5,6 +5,20 @@ import { Component } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
-  title = 'app';
+  title = 'mySolarizd';
+  phone = [{
+        id: 1,
+        name: 'Rajesh'
+  },
+  {
+        id: 2,
+        name: 'Raju'
+  },
+  {
+        id: 3,
+        name: 'Ramesh'
+  }];
+  // console.log('phone',phone)
 }
