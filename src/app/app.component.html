@@ -1,61 +1,64 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class="app-content">
-
+  <div md-toolbar>
+       <md-toolbar color="primary">
+          <span>my Solarizd</span>
+       </md-toolbar>
+  </div>
   <div class="flex-container" fxLayout fxLayout.xs="column" fxLayoutGap="2px" fxLayoutAlign="center">
     <div fxFlex fxFlexOffset="0.3px" fxFlexOffset.xs="0">
       <div fxLayout="column" fxLayoutGap="0.5px" fxLayoutAlign="center">
         <div fxFlex class="card card-block">
-          <md-card>
-            <button md-icon-button>
-                  <md-icon>home</md-icon>
-            </button>
+          <md-card> 
+          <md-icon>search</md-icon>
+          <md-input-container class="inputContainer">
+            <input mdInput [(ngModel)]="dataSearch" placeholder="Search" (blur)="searchData(this,$event)" (keyup.enter)="$event.target.blur()">
+          </md-input-container>
           </md-card>
         </div>
         <div fxFlex class="card card-block">
-          <md-card>
-            <md-list>
-               <md-list-item class="md-3-line" *ngFor="let item of phone" ng-click="null">
-                 {{item.name}}
-               </md-list-item>
-            </md-list>
-            <!-- <button md-button>FLAT</button>
-            <button md-raised-button>RAISED</button> -->
-          </md-card>
+          <md-nav-list>
+              <md-list *ngFor="let item of phone">
+                  <md-list-item class="md-3-line" ng-click="null">
+                    {{item.name}}
+                  </md-list-item>
+                </md-list>
+          </md-nav-list>
         </div>
       </div>
 
     </div>
     <div fxFlex fxFlexOffset="0.3px" fxFlexOffset.xs="0">
-        <div fxLayout="column" fxLayoutGap="0.5px" fxLayoutAlign="center">
-          <div fxFlex class="card card-block">
-            <md-card>
-              <button md-icon-button>
-                    <md-icon class="md-48">favorite</md-icon>
+      <div fxLayout="column" fxLayoutGap="0.5px" fxLayoutAlign="center">
+        <div fxFlex class="card card-block">
+          <md-card>
+            <button md-icon-button>
+                    <md-icon class="md-48">home</md-icon>
               </button>
-            </md-card>
-          </div>
-          <div fxFlex class="card card-block">
-            <md-card>
-              <button md-icon-button>
-                    <md-icon class="md-48">favorite</md-icon>
-              </button>
-            </md-card>
-          </div>
+          </md-card>
         </div>
+        <div fxFlex class="card card-block">
+          <md-card>
+            <button md-icon-button>
+                    <md-icon class="md-48">home</md-icon>
+              </button>
+          </md-card>
+        </div>
+      </div>
     </div>
     <div fxFlex fxFlexOffset="0.3px" fxFlexOffset.xs="0">
       <div fxLayout="column" fxLayoutGap="0.5px" fxLayoutAlign="center">
         <div fxFlex class="card card-block">
           <md-card>
             <button md-icon-button>
-                  <md-icon class="md-48">favorite</md-icon>
+                  <md-icon class="md-48">home</md-icon>
             </button>
           </md-card>
         </div>
         <div fxFlex class="card card-block">
           <md-card>
             <button md-icon-button>
-                  <md-icon class="md-48">favorite</md-icon>
+                  <md-icon class="md-48">home</md-icon>
             </button>
           </md-card>
         </div>
