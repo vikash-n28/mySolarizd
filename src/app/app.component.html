@@ -1,34 +1,42 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class="app-content">
+
   <div md-toolbar>
        <md-toolbar color="primary">
           <span>my Solarizd</span>
        </md-toolbar>
   </div>
-  <div class="flex-container" fxLayout fxLayout.xs="column" fxLayoutGap="2px" fxLayoutAlign="center">
-    <div fxFlex fxFlexOffset="0.3px" fxFlexOffset.xs="0">
-      <div fxLayout="column" fxLayoutGap="0.5px" fxLayoutAlign="center">
-        <div fxFlex class="card card-block">
-          <md-card> 
+
+  <div class="flex-container" fxLayout fxLayout.xs="column" fxLayoutGap="2px" fxLayoutAlign="center" class="zero">
+    <div fxFlex="33" fxFlexOffset="0.3px" fxFlexOffset.xs="0">
+      <div fxLayout="column" fxLayoutAlign="center">
+        <div fxFlex>
+          <md-card class="card card-block" fxLayout> 
           <md-icon>search</md-icon>
-          <md-input-container class="inputContainer">
-            <input mdInput [(ngModel)]="dataSearch" placeholder="Search" (blur)="searchData(this,$event)" (keyup.enter)="$event.target.blur()">
+          <md-input-container>
+            <input mdInput [(ngModel)]="dataSearch" (blur)="searchData(this,$event)" (keyup.enter)="$event.target.blur()" />
           </md-input-container>
           </md-card>
         </div>
-        <div fxFlex class="card card-block">
+        <div fxFlex class="card card-block" *ngIf="results && results.items">
           <md-nav-list>
-              <md-list *ngFor="let item of phone">
-                  <md-list-item class="md-3-line" ng-click="null">
-                    {{item.name}}
+              <md-list class="make-scrollable">
+                  <md-list-item *ngFor="let item of results.items" ng-click="null">
+                    <div fxLayout>
+                       <div class="playlist-image">
+                          <img [src]="item.snippet.thumbnails.default.url" alt="{{item.snippet.channelTitle}}" />                          
+                       </div>
+                        <h3 md-line>{{ item.snippet.title }}</h3>
+                        <h3 md-line class="duration">{{ item.contentDetails.duration}}</h3>
+                    </div>
                   </md-list-item>
                 </md-list>
           </md-nav-list>
         </div>
       </div>
-
     </div>
-    <div fxFlex fxFlexOffset="0.3px" fxFlexOffset.xs="0">
+
+    <div fxFlex="33" fxFlexOffset="0.3px" fxFlexOffset.xs="0">
       <div fxLayout="column" fxLayoutGap="0.5px" fxLayoutAlign="center">
         <div fxFlex class="card card-block">
           <md-card>
@@ -46,7 +54,8 @@
         </div>
       </div>
     </div>
-    <div fxFlex fxFlexOffset="0.3px" fxFlexOffset.xs="0">
+
+    <div fxFlex="33" fxFlexOffset="0.3px" fxFlexOffset.xs="0">
       <div fxLayout="column" fxLayoutGap="0.5px" fxLayoutAlign="center">
         <div fxFlex class="card card-block">
           <md-card>
@@ -57,9 +66,7 @@
         </div>
         <div fxFlex class="card card-block">
           <md-card>
-            <button md-icon-button>
-                  <md-icon class="md-48">home</md-icon>
-            </button>
+            <h1>afadfads</h1>
           </md-card>
         </div>
       </div>
