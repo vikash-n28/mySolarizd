@@ -1,4 +1,16 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@font-face {
+    font-family: myraidPro;
+    src: "./assets/font-family/Myriad-Pro-Light_31642.ttf";
+}
+@font-face {
+    font-family: myraidProSemiExtended;
+    src: "./assets/font-family/Myriad-Pro-Light-SemiExtended_31641.ttf";
+}
+
+body{
+    font-family:myraidProSemiExtended;
+}
 
 .input-full-width{
     width: 100%;
@@ -12,14 +24,39 @@ md-list.make-scrollable {
     white-space: wrap
 }
 
-.duration{
-    left: 0;
+.playlist-image{
+    width: 40px;
+    height: 40px;
+    margin: auto;
 }
 
-.playlist-image{
-    width: 80 !important;
-    max-height: 90 !important;
+/* resize images */
+.playlist-image img {
+    width: 100%;
+    height: auto;
 }
+
+.playlist-title{
+    font-family: myraidPro;
+    font-size: 14px;
+    margin: auto;
+    display: block;
+}
+.playlist-title h3{
+    font-weight: normal;
+    text-overflow: inherit;
+    overflow: visible;
+    margin-left: 5px;
+}
+
+.playlist-title p{
+    font-weight: normal;
+    text-overflow: inherit;
+    overflow: visible;
+    margin-left: 12px;
+    word-wrap: break-word;
+}
+
 
 ::-webkit-scrollbar {
     display: none;
