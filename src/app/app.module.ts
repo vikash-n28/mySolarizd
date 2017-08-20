@@ -7,7 +7,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { dataService } from './app.service'
 
-import { MaterialModule } from '@angular/material';
+import { MaterialModule,MdProgressSpinnerModule } from '@angular/material';
 import { MD_PLACEHOLDER_GLOBAL_OPTIONS } from '@angular/material'
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MdIconRegistry } from '@angular/material';
@@ -21,7 +21,8 @@ import 'hammerjs';
              MaterialModule,
              FormsModule,
              HttpClientModule,
-             HttpModule
+             HttpModule,
+             MdProgressSpinnerModule
 
             ],
   providers: [ {provide: MD_PLACEHOLDER_GLOBAL_OPTIONS, 

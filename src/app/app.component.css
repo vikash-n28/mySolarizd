@@ -20,10 +20,12 @@ md-list.make-scrollable {
     height: 600px;
     background-color: #eceff1;
     overflow-y: scroll;
-    text-overflow: ellipsis;
-    white-space: wrap
 }
 
+.playlist{
+padding: 0px;
+box-shadow: 1px 1px 3px grey !important;
+}
 .playlist-image{
     width: 40px;
     height: 40px;
@@ -42,19 +44,29 @@ md-list.make-scrollable {
     margin: auto;
     display: block;
 }
-.playlist-title h3{
-    font-weight: normal;
-    text-overflow: inherit;
-    overflow: visible;
-    margin-left: 5px;
-}
 
 .playlist-title p{
     font-weight: normal;
     text-overflow: inherit;
     overflow: visible;
     margin-left: 12px;
+    white-space:inherit !important;
     word-wrap: break-word;
+}
+
+.playlist-duration{
+    font-family: myraidPro;
+    font-size: 14px;
+    margin: auto;
+    display: block;
+    float: left;
+}
+
+.playlist-duration h3{
+    font-weight: normal;
+    text-overflow: inherit;
+    overflow: visible;
+    margin-left: 5px;
 }
 
 
