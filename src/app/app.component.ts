@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { dataService } from './app.service'
+// import { dataService } from './service/dataService.service'
+import { dataService } from './app.service';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 // const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -39,10 +40,13 @@ export class AppComponent implements OnInit {
                   });
       }
 
+      // userFilter: any = { title: '' };
+
       //onBlur getting data
       searchData(dataObject, event) {
             event.preventDefault();
             console.log(dataObject.dataSearch)
+            // dataSearch:
       }
 
       convertYouTubeDuration(duration) {

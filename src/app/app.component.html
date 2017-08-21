@@ -7,16 +7,17 @@
     </md-toolbar>
   </div>
 
-  <div class="flex-container" fxLayout fxLayout.xs="column" fxLayoutGap="0px" fxLayoutAlign="center">
+  <div class="flex-container" fxLayout fxLayout.xs="column" fxLayoutAlign="center">
     
-    <div fxFlex="33" fxFlexOffset="0px" fxFlexOffset.xs="0">
+    <div fxFlex="30" fxFlexOffset="0px" fxFlexOffset.xs="0">
       <div fxLayout="column" fxLayoutAlign="center">
 
         <div fxFlex="50%">
-          <md-card class="card card-block" fxLayout>
+          <md-card class="card card-block search-card" fxLayout fxLayoutGap="0.5px">
             <md-icon>search</md-icon>
-            <md-input-container>
-              <input mdInput [(ngModel)]="dataSearch" (blur)="searchData(this,$event)" (keyup.enter)="$event.target.blur()" />
+            <md-input-container md-no-float class="search-input md-block">
+              <!-- <input class="search" mdInput [(ngModel)]="dataSearch.snippet.title" (blur)="searchData(this,$event)" (keyup.enter)="$event.target.blur()" /> -->
+              <input mdInput type="text" [(ngModel)]="dataSearch" (ngModelChange)="searchData(this,$event)"  class="" />
             </md-input-container>
           </md-card>
         </div>
@@ -25,7 +26,7 @@
           <md-card class="playlist">
           <md-nav-list>
             <md-list class="make-scrollable">
-              <md-list-item *ngFor="let item of results.items" ng-click="null">
+              <md-list-item *ngFor="let item of results.items | filterBy: userFilter" ng-click="null">
                 <div fxFlex="99" fxLayoutAlign="center">
 
                   <div fxFlex="10%" class="playlist-image" fxLayoutAlign="center">
@@ -35,7 +36,7 @@
                     <p md-line>{{ item.snippet.title }}</p>
                   </div>
                   <div class="playlist-duration" fxFlex="12%">
-                    <h3 md-line class="duration">{{ item.contentDetails.duration}}</h3>
+                    <h3 md-line class="duration">{{ item.contentDetails.duration }}</h3>
                   </div>
 
                 </div>
@@ -48,19 +49,19 @@
       </div>
     </div>
 
-    <div fxFlex="33" fxFlexOffset="0px" fxFlexOffset.xs="0">
+    <div fxFlex="40" fxFlexOffset="0px" fxFlexOffset.xs="0">
       <div fxLayout="column" fxLayoutGap="0px" fxLayoutAlign="center">
-        <div fxFlex class="card card-block">
-          <md-card>
+          <md-card fxFlex="50%" class="youtube-control">
+            <span ></span>
             <button md-icon-button>
               <md-icon class="material-icons md-18">skip_previous</md-icon>
             </button>
             <button md-icon-button>
               <md-icon class="material-icons md-18">play_arrow</md-icon>
             </button>
-            <button md-icon-button>
+            <!-- <button md-icon-button>
               <md-icon class="material-icons md-18">pause_arrow</md-icon>
-            </button>
+            </button> -->
             <button md-icon-button>
               <md-icon class="material-icons md-18">skip_next</md-icon>
             </button>
@@ -68,30 +69,32 @@
               <md-icon class="md-18">volume_up</md-icon>
             </button>
           </md-card>
-        </div>
-        <div fxFlex="30" class="card card-block">
+        <div fxFlex="30" class="youtube-add-playlist">
           <md-card>
-            <button md-icon-button>
-                    <md-icon class="md-48">play_arrow</md-icon>
-            </button>
-            <md-spinner></md-spinner>
+            <h3 fxLayoutAlign="center center" class="add-playlist">Add tracks to your new playlist</h3>
+            <i fxLayoutAlign="center center" class="material-icons playlist-icon">playlist_add</i>
           </md-card>
         </div>
       </div>
     </div>
 
-    <div fxFlex="33" fxFlexOffset="0.3px" fxFlexOffset.xs="0">
-      <div fxLayout="column" fxLayoutGap="0.5px" fxLayoutAlign="center">
-        <div fxFlex class="card card-block">
-          <md-card>
-            <button md-icon-button>
-                  <md-icon class="md-48">home</md-icon>
-            </button>
+    <div fxFlex="30" fxFlexOffset="0px" fxFlexOffset.xs="0">
+      <div fxLayout="column" fxLayoutGap="0px" fxLayoutAlign="center stretch">
+        <div fxFlex>
+          <md-card class="display-youtube">
+            <span >
+                <i fxLayoutAlign="center center" class="material-icons video-icon">subscriptions</i>
+            </span>
+            <span>
+            <!-- <iframe src="https://www.youtube.com/embed/SMs0GnYze34?controls=0"></iframe> -->   
+            </span>
           </md-card>
         </div>
-        <div fxFlex class="card card-block">
+        <div fxFlex>
           <md-card>
-            <h1>afadfads</h1>
+            <span>
+              <i class="material-icons video-icon">playlist_play</i>              
+            </span>
           </md-card>
         </div>
       </div>

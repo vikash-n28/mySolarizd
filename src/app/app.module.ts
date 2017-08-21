@@ -11,6 +11,7 @@ import { MaterialModule,MdProgressSpinnerModule } from '@angular/material';
 import { MD_PLACEHOLDER_GLOBAL_OPTIONS } from '@angular/material'
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MdIconRegistry } from '@angular/material';
+import { Ng2FilterPipeModule } from 'ng2-filter-pipe';
 import 'hammerjs';
 
 @NgModule({
@@ -22,8 +23,8 @@ import 'hammerjs';
              FormsModule,
              HttpClientModule,
              HttpModule,
-             MdProgressSpinnerModule
-
+             MdProgressSpinnerModule,
+             Ng2FilterPipeModule
             ],
   providers: [ {provide: MD_PLACEHOLDER_GLOBAL_OPTIONS, 
                 useValue: { float: 'always' }},
