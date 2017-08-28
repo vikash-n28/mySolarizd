@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { FormControl, Validators } from '@angular/forms';
-// import { dataService } from './service/dataService.service'
-import { dataService } from './app.service';
-import { Http } from '@angular/http';
+// import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+//Services
+import { YoutubeApiService } from './shared/services/youtube-api.service';
+import { YoutubePlayerService } from './shared/services/youtube-player.service';
+
 // const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const time_extractor = /([0-9]*H)?([0-9]*M)?([0-9]*S)?$/;
 @Component({
@@ -14,42 +17,73 @@ const time_extractor = /([0-9]*H)?([0-9]*M)?([0-9]*S)?$/;
 
 export class AppComponent implements OnInit {
       results: string[];
-      errorMessage: string;
-      constructor(private dataService: dataService, private http: Http) { }
-      ngOnInit(): void {
-            //  this.dataService.getData().subscribe(data => this.results = data);
-            // Make the HTTP request:
-            var serverUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&id=UC3LMyMiZpBV2EIvqK6YSyaQ&maxResults=25&key=AIzaSyC4qm4umraWnpUhFvO9ABfZAogs2YIwH7k';
-            var jsonUrl = './assets/file.json';
-            this.http.get(jsonUrl)
-                  .map(res => res.json())
-                  .subscribe(data => {
-                        // Read the result field from the JSON response.
-                        if (data) {
-                              if (data.items.length) {
-                                    for (var i = 0; i < data.items.length; i++) {
-                                          if (data.items[i].contentDetails.duration) {
-                                                var duration = this.convertYouTubeDuration(data.items[i].contentDetails.duration);
-                                                data.items[i].contentDetails.duration = duration;
+      isPlay: boolean;
+      isPlaylist: boolean;
+      isIframe: boolean;
+      isRelatedList: boolean;
+      playlist: string[];
+      videoId: string;
+
+      private player;
+      private ytEvent;
+      private last_search: string;
+
+
+
+      constructor(private youtubeService: YoutubeApiService,
+            private YoutubePlayer: YoutubePlayerService,
+            private sanitizer: DomSanitizer) { }
+
+      //onModelChnage getting data
+      searchData(dataObject): void {
+            if (dataObject.dataSearch.length > 0) {
+                  this.last_search = dataObject.dataSearch;
+                  this.youtubeService.searchVideos(this.last_search)
+                        .then(data => {
+                              if (data) {
+                                    var dataArray = data;
+                                    for (var i = 0; i < dataArray.length; i++) {
+                                          if (dataArray[i].contentDetails.duration) {
+                                                var duration = this.convertYouTubeDuration(dataArray[i].contentDetails.duration);
+                                                dataArray[i].contentDetails.duration = duration;
                                           }
                                     }
+                                    if (dataArray.length > 0)
+                                          this.results = dataArray;
                               }
-                              this.results = data;
-                              console.log(this.results)
+                        })
+            }
+      }
+
+
+      ngOnInit(): void {
+            this.isPlay = true;
+            this.isPlaylist = false;
+            this.isIframe = false;
+            this.isRelatedList = false;
+            this.playlist = [];
+            // this.YoutubePlayer.createPlayer();
+            // this.createiFramePlayer();
+            this.youtubeService.searchVideos('')
+                  .then(data => {
+                        if (data) {
+                              var dataArray = data;
+                              if (dataArray.length > 0) {
+                                    for (var i = 0; i < dataArray.length; i++) {
+                                          if (dataArray[i].contentDetails.duration) {
+                                                var duration = this.convertYouTubeDuration(dataArray[i].contentDetails.duration);
+                                                dataArray[i].contentDetails.duration = duration;
+                                          }
+                                    }
+                                    if (dataArray.length > 0)
+                                          this.results = dataArray;
+                              }
+
                         }
-                  });
+                  })
       }
 
-      // userFilter: any = { title: '' };
-
-      //onBlur getting data
-      searchData(dataObject, event) {
-            event.preventDefault();
-            console.log(dataObject.dataSearch)
-            // dataSearch:
-      }
-
-      convertYouTubeDuration(duration) {
+      convertYouTubeDuration(duration: any) {
             var extracted = time_extractor.exec(duration);
             var hours = parseInt(extracted[1], 10) || 0;
             var minutes = parseInt(extracted[2], 10) || 0;
@@ -57,6 +91,41 @@ export class AppComponent implements OnInit {
             return (hours + ':' + minutes + ':' + seconds).toString();
 
       }
+
+      selectVideo(video: any) {
+            console.log(this.playlist);
+            this.playlist.push(video);
+            console.log('video', video);
+            if (this.playlist.length > 0) {
+
+                  this.createiFramePlayer().then(res => {
+                        if (res) {
+                              console.log("selectVideo calling...")
+                              this.YoutubePlayer.playVideo(video.id, video.snippet.title);
+                              this.isPlaylist = true;
+                              this.isIframe = true;
+                        }
+
+                  })
+            }
+
+      }
+
+
+      createiFramePlayer(): Promise<boolean> {
+            return new Promise<boolean>((resolve, reject) => {
+                  let doc = window.document;
+                  let playerApi = doc.createElement('script');
+                  playerApi.type = 'text/javascript';
+                  playerApi.src = 'https://www.youtube.com/iframe_api';
+                  doc.body.appendChild(playerApi);
+                  this.YoutubePlayer.createPlayer().then(res => {
+                        if (res)
+                        resolve(true);
+                        console.log("createiFramePlayer calling...")
+                  })
+            });
+      };
 }
 
 interface ItemsResponse {

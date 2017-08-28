@@ -4,32 +4,35 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
-import { AppComponent } from './app.component';
-import { dataService } from './app.service'
-
-import { MaterialModule,MdProgressSpinnerModule } from '@angular/material';
-import { MD_PLACEHOLDER_GLOBAL_OPTIONS } from '@angular/material'
+// import { YoutubePlayerModule } from 'ng2-youtube-player';
+//material
+import { MaterialModule } from '@angular/material';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MdIconRegistry } from '@angular/material';
 import { Ng2FilterPipeModule } from 'ng2-filter-pipe';
 import 'hammerjs';
 
+//Components
+import { AppComponent } from './app.component';
+
+//Services
+import { YoutubeApiService } from './shared/services/youtube-api.service';
+import { YoutubePlayerService } from './shared/services/youtube-player.service';
+
+
+
 @NgModule({
   declarations: [ AppComponent ],
   imports: [ BrowserModule,
              BrowserAnimationsModule,
+             HttpModule,
              FlexLayoutModule,
              MaterialModule,
              FormsModule,
              HttpClientModule,
-             HttpModule,
-             MdProgressSpinnerModule,
              Ng2FilterPipeModule
             ],
-  providers: [ {provide: MD_PLACEHOLDER_GLOBAL_OPTIONS, 
-                useValue: { float: 'always' }},
-                MdIconRegistry,
-                dataService],
+  providers: [MdIconRegistry,YoutubeApiService,YoutubePlayerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
