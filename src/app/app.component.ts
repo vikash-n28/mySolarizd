@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,Input } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FormControl, Validators } from '@angular/forms';
 // import { Http } from '@angular/http';
@@ -17,7 +17,7 @@ const time_extractor = /([0-9]*H)?([0-9]*M)?([0-9]*S)?$/;
 
 export class AppComponent implements OnInit {
       results: string[];
-      isPlay: boolean;
+      isPause: boolean;
       isPlaylist: boolean;
       isIframe: boolean;
       isRelatedList: boolean;
@@ -27,7 +27,8 @@ export class AppComponent implements OnInit {
       private player;
       private ytEvent;
       private last_search: string;
-
+      
+      @Input() playPauseEvent
 
 
       constructor(private youtubeService: YoutubeApiService,
@@ -57,13 +58,11 @@ export class AppComponent implements OnInit {
 
 
       ngOnInit(): void {
-            this.isPlay = true;
+            this.isPause = true;
             this.isPlaylist = false;
             this.isIframe = false;
             this.isRelatedList = false;
             this.playlist = [];
-            // this.YoutubePlayer.createPlayer();
-            // this.createiFramePlayer();
             this.youtubeService.searchVideos('')
                   .then(data => {
                         if (data) {
@@ -80,7 +79,7 @@ export class AppComponent implements OnInit {
                               }
 
                         }
-                  })
+                  });
       }
 
       convertYouTubeDuration(duration: any) {
@@ -93,39 +92,20 @@ export class AppComponent implements OnInit {
       }
 
       selectVideo(video: any) {
-            console.log(this.playlist);
+            console.log('Playlist',this.playlist);
             this.playlist.push(video);
-            console.log('video', video);
             if (this.playlist.length > 0) {
-
-                  this.createiFramePlayer().then(res => {
-                        if (res) {
-                              console.log("selectVideo calling...")
-                              this.YoutubePlayer.playVideo(video.id, video.snippet.title);
-                              this.isPlaylist = true;
-                              this.isIframe = true;
-                        }
-
-                  })
+                  this.YoutubePlayer.playVideo(video.id, video.snippet.title);
+                  this.isPlaylist = true;
+                  this.isIframe = true;
             }
-
       }
 
-
-      createiFramePlayer(): Promise<boolean> {
-            return new Promise<boolean>((resolve, reject) => {
-                  let doc = window.document;
-                  let playerApi = doc.createElement('script');
-                  playerApi.type = 'text/javascript';
-                  playerApi.src = 'https://www.youtube.com/iframe_api';
-                  doc.body.appendChild(playerApi);
-                  this.YoutubePlayer.createPlayer().then(res => {
-                        if (res)
-                        resolve(true);
-                        console.log("createiFramePlayer calling...")
-                  })
-            });
-      };
+      playPause(event: string): void {
+            console.log(this.playPauseEvent);
+            event === 'pause' ? this.isPause = false:this.isPause = true;
+		event === 'pause' ? this.YoutubePlayer.pausePlayingVideo(): this.YoutubePlayer.playPausedVideo();
+	}
 }
 
 interface ItemsResponse {

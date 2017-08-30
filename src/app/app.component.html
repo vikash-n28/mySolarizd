@@ -57,16 +57,16 @@
         <md-card fxFlex="50%" class="youtube-control" fxLayout="column">
           <span fxFlex class="title-control"></span>
           <span fxFlex fxLayout="row" class="button-control">
-              <button md-icon-button>
+              <button md-icon-button (click)="prevVideo()">
                 <md-icon class="material-icons md-48">skip_previous</md-icon>
               </button>
-              <button md-icon-button *ngIf="isPlay" (click)="playPause('play')">
+              <button md-icon-button *ngIf="!isPause" (click)="playPause('play')">
                 <md-icon class="material-icons md-48">play_arrow</md-icon>
               </button>
-              <button md-icon-button *ngIf="!isPlay" (click)="playPause('pause')">
+              <button md-icon-button *ngIf="isPause" (click)="playPause('pause')">
                 <md-icon class="material-icons md-48">pause_arrow</md-icon>
               </button>
-              <button md-icon-button>
+              <button md-icon-button (click)="nextVideo()">
                 <md-icon class="material-icons md-48">skip_next</md-icon>
               </button>
               <button md-icon-button [disabled]="true" >
@@ -119,13 +119,11 @@
     <div fxFlex>
       <md-card class="display-youtube">
         <span [hidden]="isIframe">
-                <i fxLayoutAlign="center center" class="material-icons video-icon">subscriptions</i>
-            </span>
-        <div id="yt-player" [hidden]="!isIframe">
-          <!-- <iframe src="https://www.youtube.com/embed/SMs0GnYze34?controls=0"></iframe> -->
-          <!-- <youtube-player [videoId]="videoId" (ready)="savePlayer($event)" (change)="onStateChange($event)"> -->
-          <!-- </youtube-player> -->
-        </div>
+            <i fxLayoutAlign="center center" class="material-icons video-icon">subscriptions</i>
+        </span>
+        <span [hidden]="!isIframe">
+            <div id="yt-player"></div>
+        </span>
       </md-card>
     </div>
     <div fxFlex>

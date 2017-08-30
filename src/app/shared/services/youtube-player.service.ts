@@ -6,6 +6,8 @@ let _window: any = window;
 @Injectable()
 export class YoutubePlayerService {
 	public yt_player;
+	public YT;
+	public done;
 	private currentVideoId: string;
 	private promise: Promise<boolean>;
 
@@ -13,19 +15,22 @@ export class YoutubePlayerService {
 	@Output() playPauseEvent: EventEmitter<any> = new EventEmitter(true);
 	@Output() currentVideoText: EventEmitter<any> = new EventEmitter(true);
 
-	createPlayer(): Promise<boolean>{
-		return new Promise((resolve, reject) => {
-			var tag = document.createElement('script');
-			tag.src = "https://www.youtube.com/iframe_api";
-			var firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+	constructor() {
+		var that = this;
+		document.getElementById('yt-player-script').onload = function(){
+			that.createPlayer();
+			// that.YT = _window.YT;
+	   }
+	}
 
+	createPlayer(){
 			let interval = setInterval(() => {
 				if ((typeof _window.YT !== 'undefined') && _window.YT && _window.YT.Player) {
 					this.yt_player = new _window.YT.Player('yt-player', {
-						width: '410',
-						height: '300',
+						width: '405',
+						height: '295',
 						playerVars: {
+							color: 'white',
 							iv_load_policy: '3',
 							rel: '0'
 						},
@@ -36,42 +41,38 @@ export class YoutubePlayerService {
 						}
 					});
 					clearInterval(interval);
+				}else {
+                   console.log("Player ia not Ready...");
 				}
-				
 			});
-			console.log("service calling...");
-			if(interval)
-			resolve(true);
-			else
-			reject(false);	
-		});
-
-
 	}
 
 
 	onPlayerStateChange(event: any) {
-		const state = event.data;
-		switch (state) {
-			case 0:
-				this.videoChangeEvent.emit(true);
-				this.playPauseEvent.emit('pause');
-				break;
-			case 1:
-				this.playPauseEvent.emit('play');
-				break;
-			case 2:
-				this.playPauseEvent.emit('pause');
-				break;
-		}
+		console.log("onPlayerStateChange",event);
+		// const state = event.data;
+		// switch (state) {
+		// 	case 0:
+		// 		this.videoChangeEvent.emit(true);
+		// 		this.playPauseEvent.emit('pause');
+		// 		break;
+		// 	case 1:
+		// 		this.playPauseEvent.emit('play');
+		// 		break;
+		// 	case 2:
+		// 		this.playPauseEvent.emit('pause');
+		// 		break;
+		// }
+         
 	}
 
 	playVideo(videoId: string, videoText?: string): void {
 		if (!this.yt_player) {
-			console.log("player is not ready...");
+			console.log("videoId Couldn't Find");
 			// 	this.notificationService.showNotification('Player not ready.');
 			return;
 		}
+		console.log('videoId',videoId);
 		this.yt_player.loadVideoById(videoId);
 		this.currentVideoId = videoId;
 		this.currentVideoText.emit(videoText);
@@ -79,6 +80,7 @@ export class YoutubePlayerService {
 
 	pausePlayingVideo(): void {
 		this.yt_player.pauseVideo();
+		this.yt_player.setVolume(0);
 	}
 
 	playPausedVideo(): void {
@@ -86,6 +88,7 @@ export class YoutubePlayerService {
 	}
 
 	getCurrentVideo(): string {
+		console.log('this.currentVideoId',this.currentVideoId);
 		return this.currentVideoId;
 	}
 
