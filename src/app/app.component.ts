@@ -1,4 +1,4 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FormControl, Validators } from '@angular/forms';
 // import { Http } from '@angular/http';
@@ -21,19 +21,24 @@ export class AppComponent implements OnInit {
       isPlaylist: boolean;
       isIframe: boolean;
       isRelatedList: boolean;
+      istimeDuration: boolean;
       playlist: string[];
       videoId: string;
 
       private player;
       private ytEvent;
+      public progressBar;
+      public timeDuration;
+      public volume;
       private last_search: string;
-      
+
       @Input() playPauseEvent
 
 
       constructor(private youtubeService: YoutubeApiService,
             private YoutubePlayer: YoutubePlayerService,
-            private sanitizer: DomSanitizer) { }
+            private sanitizer: DomSanitizer) {
+      }
 
       //onModelChnage getting data
       searchData(dataObject): void {
@@ -63,6 +68,7 @@ export class AppComponent implements OnInit {
             this.isIframe = false;
             this.isRelatedList = false;
             this.playlist = [];
+            this.istimeDuration = false;
             this.youtubeService.searchVideos('')
                   .then(data => {
                         if (data) {
@@ -87,25 +93,44 @@ export class AppComponent implements OnInit {
             var hours = parseInt(extracted[1], 10) || 0;
             var minutes = parseInt(extracted[2], 10) || 0;
             var seconds = parseInt(extracted[3], 10) || 0;
-            return (hours + ':' + minutes + ':' + seconds).toString();
-
+            var sec = (seconds < 10)? '0'+ seconds: seconds;
+            var min = (minutes < 10)? '0'+minutes:minutes;
+            var durationInterval = (hours > 0)? (hours + ':' + min + ':' + sec):(min + ':' + sec);
+            return durationInterval.toString();
       }
 
       selectVideo(video: any) {
-            console.log('Playlist',this.playlist);
+            console.log(video)
             this.playlist.push(video);
             if (this.playlist.length > 0) {
                   this.YoutubePlayer.playVideo(video.id, video.snippet.title);
                   this.isPlaylist = true;
                   this.isIframe = true;
+                  this.playerInfo();
             }
       }
 
       playPause(event: string): void {
             console.log(this.playPauseEvent);
-            event === 'pause' ? this.isPause = false:this.isPause = true;
-		event === 'pause' ? this.YoutubePlayer.pausePlayingVideo(): this.YoutubePlayer.playPausedVideo();
-	}
+            event === 'pause' ? this.isPause = false : this.isPause = true;
+            event === 'pause' ? this.YoutubePlayer.pausePlayingVideo() : this.YoutubePlayer.playPausedVideo();
+      }
+
+      playerInfo() {
+            var self = this;
+            setInterval(function () {
+                  var progressBar = self.YoutubePlayer.updateProgressBar()
+                  var timeDuration = self.YoutubePlayer.updateTimerDisplay();
+                  if (progressBar) {
+                        self.progressBar = progressBar;
+                        self.timeDuration = timeDuration
+                        self.istimeDuration = true;
+                  }
+                  self.volume = self.YoutubePlayer.volume;
+            }, 1000);
+      }
+
+
 }
 
 interface ItemsResponse {

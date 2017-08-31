@@ -47,7 +47,6 @@ margin-top: 2px;
 .playlist-title{
     font-family: myraidPro;
     font-size: 14px;
-    margin: auto;
     display: block;
     max-width: 100% !important;
 }
@@ -107,7 +106,7 @@ iframe{
 }
 
 .button-control{
-    margin: auto;
+    /* margin: auto; */
 }
 
 .add-playlist-card{
@@ -123,7 +122,7 @@ iframe{
 
 .youtube-add-playlist h3{
     font-family:myraidProSemiExtended;
-    color:#9C27B0; 
+    color:#9B27B0; 
 }
 
 .related-videos{
@@ -144,4 +143,13 @@ iframe{
 .playlist-scrollable{
     overflow-y: scroll;
     height: 258px;
+}
+
+
+.progressBar{
+    margin: auto;
+    width: 100%;
+}
+.progressBar section{
+   width: 85%;
 }

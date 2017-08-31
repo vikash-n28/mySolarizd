@@ -56,7 +56,7 @@
       <div fxLayout="column" fxLayoutGap="0px" fxLayoutAlign="center">
         <md-card fxFlex="50%" class="youtube-control" fxLayout="column">
           <span fxFlex class="title-control"></span>
-          <span fxFlex fxLayout="row" class="button-control">
+          <div fxFlex fxLayout="row" fxLayoutAlign="space-around center">
               <button md-icon-button (click)="prevVideo()">
                 <md-icon class="material-icons md-48">skip_previous</md-icon>
               </button>
@@ -75,12 +75,19 @@
               <section>
               <md-slider class="volume-slider" [(ngModel)]="volume"></md-slider>
               </section>
-            </span>
-          <section class="example-section">
-            <md-progress-bar class="example-margin" [color]="color" [mode]="Accent" [value]="volume" [bufferValue]="75">
-            </md-progress-bar>
-          </section>
-          {{bufferValue}}
+            </div>
+            
+          <div fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" class="progressBar"> 
+            <span *ngIf="timeDuration && timeDuration.ytCurrentTime"><h3>{{timeDuration.ytCurrentTime}}</h3></span>
+            <span *ngIf="!istimeDuration"><h3>--:--</h3></span>
+            <section class="example-section">
+              <md-progress-bar class="example-margin" [color]="color" [mode]="Accent" [value]="progressBar" [bufferValue]="100">
+              </md-progress-bar>
+            </section>
+            <span *ngIf="timeDuration && timeDuration.ytDuration"><h3>{{timeDuration.ytDuration}}</h3></span>
+            <span *ngIf="!istimeDuration"><h3>--:--</h3></span>
+          </div>
+
         </md-card>
         <div fxFlex="30" class="youtube-add-playlist">
           <md-card class="add-playlist-card">
@@ -91,25 +98,33 @@
             <span *ngIf="isPlaylist">
                 <md-list class="playlist-scrollable">
                     <md-list-item *ngFor="let list of playlist ; let i = index" ng-click="null">
-                      <div fxFlex="99" fxLayoutAlign="center" >
-                        <div fxFlex="70%" class="playlist-title" fxLayout="row">
-                          <h4 md-line>{{i}}</h4>
-                          <span md-line class="playlist-play-button" fxLayout="row" fxLayoutAlign="center center">
-                          <i [style.color]="'#00C853'" class="material-icons">play_arrow</i>
+                      <div fxFlex fxLayoutAlign="space-around center">
+
+                        <div fxFlex="70%"  fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="space-around center">
+                          <span md-line class="playlist-title"><h4 >{{i}}</h4></span>
+                          <i md-line [style.color]="'grey'" class="material-icons">drag_handle</i>
+                          <i md-line [style.color]="'#00C853'" class="material-icons">play_arrow</i>
                           <!-- <i [style.color]="'#C62828'" class="material-icons">pause_arrow</i>                           -->
-                          </span>
-            <p md-line>{{ list.snippet.title }}</p>
-        </div>
-        <!-- <div class="playlist-duration" fxFlex="12%">
-                          <h3 md-line class="duration">{{ item.contentDetails.duration }}</h3>
-                        </div> -->
+                           <p md-line>{{ list.snippet.title }}</p>
+                        </div>
 
-      </div>
+                        <div fxLayoutAlign="end center" fxLayoutGap="5px" fxLayout="row" fxFlex="20%">
+                          <span md-line *ngIf="timeDuration && timeDuration.ytCurrentTime"><h3>{{timeDuration.ytCurrentTime}}  /</h3></span>
+                          <span md-line *ngIf="list.contentDetails.duration"><h3>{{list.contentDetails.duration}}</h3></span>
+                        </div>
 
-      </md-list-item>
-      </md-list>
-      </span>
-      </md-card>
+                        <div fxLayoutAlign="end center" fxLayoutGap="5px" fxFlex="10%">
+                            <button md-icon-button>
+                                <md-icon class="material-icons md-48">close</md-icon>
+                            </button>
+                        </div>
+
+                      </div>
+
+                    </md-list-item>
+                </md-list>
+            </span>
+        </md-card>
     </div>
   </div>
 </div>
