@@ -19,11 +19,12 @@ export class YoutubePlayerService {
 	@Output() videoChangeEvent: EventEmitter<any> = new EventEmitter(true);
 	@Output() playPauseEvent: EventEmitter<any> = new EventEmitter(true);
 	@Output() currentVideoText: EventEmitter<any> = new EventEmitter(true);
+	
 
 	constructor() {
-		var that = this;
+		var self = this;
 		document.getElementById('yt-player-script').onload = function () {
-			that.createPlayer();
+			self.createPlayer();
 			// that.YT = _window.YT;
 		}
 	}
@@ -59,6 +60,8 @@ export class YoutubePlayerService {
 		if (this.currentVideoId) {
 			this.updateTimerDisplay();
 			this.updateProgressBar();
+			this.volume = Math.round(this.yt_player.getVolume());
+
 			clearInterval(time_update_interval);
 			// Start interval to update elapsed time display and
 			// the elapsed part of the progress bar every second.
@@ -68,7 +71,6 @@ export class YoutubePlayerService {
 			}, 1000);
 		}
 
-		this.volume = Math.round(this.yt_player.getVolume())
 	}
 
 
@@ -86,7 +88,7 @@ export class YoutubePlayerService {
 				this.playPauseEvent.emit('pause');
 				break;
 		}
-
+		console.log('state',this.playPauseEvent);
 	}
 
 	playVideo(videoId: string, videoText?: string): void {
@@ -98,6 +100,16 @@ export class YoutubePlayerService {
 		this.yt_player.loadVideoById(videoId);
 		this.currentVideoId = videoId;
 		this.currentVideoText.emit(videoText);
+	}
+
+	volumeSeek(volume: number): void {
+		console.log("volume"+ volume);
+		if (!this.yt_player)
+			return;
+		console.log("volume",volume);
+		this.yt_player.setVolume(volume);
+		
+		
 	}
 
 	pausePlayingVideo(): void {
@@ -116,6 +128,11 @@ export class YoutubePlayerService {
 	// resizePlayer(width: number, height: number) {
 	// 	this.yt_player.setSize(width, height);
 	// }
+
+	stopCurrentVideo(): void {
+		if(this.yt_player)
+		this.yt_player.stopVideo();
+	}
 
 	updateTimerDisplay() {
 		this.ytCurrentTime = this.formatTime(this.yt_player.getCurrentTime());

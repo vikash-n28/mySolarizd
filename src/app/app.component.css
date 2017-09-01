@@ -1,8 +1,27 @@
 
+.youtube-control.mat-card{
+    padding: 5px !important;
+}
+
+.add-playlist-card.mat-card{
+    padding: 5px !important;
+}
+
+.search-card.mat-card{
+    padding: 10px !important;
+}
+
+.add-playlist-card{
+    height: 279px;
+    /* background-color: #EDE7F6; */
+}
 
 .search-input{
     width: 100%;
     outline: none;
+    margin-left: 2%;
+    font-family: myraidPro;
+    font-size: 18px;
 }
 
 .material-icons{
@@ -11,7 +30,7 @@
 
 
 md-list.make-scrollable {
-    height: 515px;
+    height: 508px;
     background-color: #EDE7F6;
     overflow-y: scroll;
 }
@@ -23,7 +42,7 @@ md-nav-list.mat-nav-list{
 }
 
 md-card.search-card{
-    box-shadow: 0.5px 1px 2px #CE93D8;
+    box-shadow: 2px 2px 1.5px #9E9E9E;
     margin: 0px 2px 1px 0px;
 }
 
@@ -36,6 +55,21 @@ margin-top: 2px;
     width: 40px;
     height: 40px;
     margin: auto;
+}
+
+.control-image{
+    width: 70px;
+    height: 50px;
+    margin: 0px;
+}
+
+.control-image img{
+    width: 100%;
+    height: auto;
+}
+
+.title-control{
+    max-height:50px;
 }
 
 /* resize images */
@@ -55,7 +89,7 @@ margin-top: 2px;
     font-weight: normal;
     text-overflow: inherit;
     overflow: visible;
-    margin-left: 12px;
+    margin-left: 5px;
     white-space:inherit !important;
     word-wrap: break-word;
 }
@@ -103,15 +137,18 @@ iframe{
 
 .youtube-control{
     height: 300px;
+    margin:0px
+}
+
+.youtube-control{
+    /* margin */
 }
 
 .button-control{
     /* margin: auto; */
 }
 
-.add-playlist-card{
-    /* background-color: #EDE7F6; */
-}
+
 
 .playlist-icon{
     font-size: 100px;
@@ -127,7 +164,7 @@ iframe{
 
 .related-videos{
     padding: 0px !important;
-    height: 314px;
+    height: 290px;
 
 }
 
@@ -152,4 +189,17 @@ iframe{
 }
 .progressBar section{
    width: 85%;
+}
+
+.wishlist{
+    display: -webkit-box !important;
+}
+
+.wishlist h3{
+    font-size: 15px !important;
+}
+
+.wishlist i{
+    text-overflow: inherit;
+    font-size: 18px !important;
 }

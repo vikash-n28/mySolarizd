@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 // import { YoutubePlayerModule } from 'ng2-youtube-player';
 //material
-import { MaterialModule } from '@angular/material';
+import { MaterialModule,MD_PLACEHOLDER_GLOBAL_OPTIONS } from '@angular/material';
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { MdIconRegistry } from '@angular/material';
 import { Ng2FilterPipeModule } from 'ng2-filter-pipe';
@@ -32,7 +32,8 @@ import { YoutubePlayerService } from './shared/services/youtube-player.service';
              HttpClientModule,
              Ng2FilterPipeModule
             ],
-  providers: [MdIconRegistry,YoutubeApiService,YoutubePlayerService],
+  providers: [MdIconRegistry,YoutubeApiService,YoutubePlayerService,
+              {provide: MD_PLACEHOLDER_GLOBAL_OPTIONS, useValue: {float: 'never'}}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

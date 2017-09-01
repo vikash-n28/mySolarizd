@@ -13,11 +13,11 @@
       <div fxLayout="column" fxLayoutAlign="center">
 
         <div fxFlex="50%">
-          <md-card class="card card-block search-card" fxLayout fxLayoutGap="0.5px">
+          <md-card class="card card-block search-card" fxLayout fxLayoutGap="0.5px" fxLayoutAlign="center center">
 
             <md-input-container md-no-float class="search-input md-block">
-              <input mdInput placeholder="Search" type="text" [(ngModel)]="dataSearch" (ngModelChange)="searchData(this)" autocomplete="off"
-              />
+              <input mdInput placeholder="Search On YouTube..." type="text" [(ngModel)]="dataSearch" (ngModelChange)="searchData(this)"
+                autocomplete="off" />
             </md-input-container>
 
             <button md-icon-button [disabled]="true"><md-icon>search</md-icon></button>
@@ -55,40 +55,51 @@
     <div fxFlex="40" fxFlexOffset="0px" fxFlexOffset.xs="0">
       <div fxLayout="column" fxLayoutGap="0px" fxLayoutAlign="center">
         <md-card fxFlex="50%" class="youtube-control" fxLayout="column">
-          <span fxFlex class="title-control"></span>
+          <div class="title-control">
+            <span *ngIf="currentVideo" fxLayoutAlign="center center">
+                <div class="control-image">
+                    <img [src]="currentVideo.snippet.thumbnails.default.url" md-line alt="{{currentVideo.snippet.channelTitle}}" />
+                </div>
+                <div fxFlex class="playlist-title">
+                    <p md-line>{{ currentVideo.snippet.title }}</p>
+                </div>
+            </span>
+          </div>
           <div fxFlex fxLayout="row" fxLayoutAlign="space-around center">
-              <button md-icon-button (click)="prevVideo()">
+            <button md-icon-button [disabled]="previousDisable" (click)="previousVideo()">
                 <md-icon class="material-icons md-48">skip_previous</md-icon>
               </button>
-              <button md-icon-button *ngIf="!isPause" (click)="playPause('play')">
+            <button md-icon-button [disabled]="playDisable" *ngIf="isPlay" (click)="playPause('play')">
                 <md-icon class="material-icons md-48">play_arrow</md-icon>
               </button>
-              <button md-icon-button *ngIf="isPause" (click)="playPause('pause')">
+            <button md-icon-button *ngIf="!isPlay" (click)="playPause('pause')">
                 <md-icon class="material-icons md-48">pause_arrow</md-icon>
               </button>
-              <button md-icon-button (click)="nextVideo()">
+            <button md-icon-button [disabled]="nextDisable" (click)="nextVideo()">
                 <md-icon class="material-icons md-48">skip_next</md-icon>
               </button>
-              <button md-icon-button [disabled]="true" >
+            <button md-icon-button (click)="speakerClick()">
                 <md-icon class="md-48">volume_up</md-icon>
               </button>
-              <section>
-              <md-slider class="volume-slider" [(ngModel)]="volume"></md-slider>
-              </section>
-            </div>
-            
-          <div fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" class="progressBar"> 
-            <span *ngIf="timeDuration && timeDuration.ytCurrentTime"><h3>{{timeDuration.ytCurrentTime}}</h3></span>
+            <section>
+              <md-slider class="volume-slider" min="0" max="100" [(ngModel)]="volume" (ngModelChange)="volumeSeek(this)"></md-slider>
+            </section>
+          </div>
+
+          <div fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px" class="progressBar">
+            <span *ngIf="timeDuration && timeDuration.ytCurrentTime && istimeDuration"><h3>{{timeDuration.ytCurrentTime}}</h3></span>
             <span *ngIf="!istimeDuration"><h3>--:--</h3></span>
             <section class="example-section">
               <md-progress-bar class="example-margin" [color]="color" [mode]="Accent" [value]="progressBar" [bufferValue]="100">
               </md-progress-bar>
             </section>
-            <span *ngIf="timeDuration && timeDuration.ytDuration"><h3>{{timeDuration.ytDuration}}</h3></span>
+            <span *ngIf="timeDuration && timeDuration.ytDuration && istimeDuration"><h3>{{timeDuration.ytDuration}}</h3></span>
             <span *ngIf="!istimeDuration"><h3>--:--</h3></span>
           </div>
 
         </md-card>
+
+
         <div fxFlex="30" class="youtube-add-playlist">
           <md-card class="add-playlist-card">
             <span *ngIf="!isPlaylist">
@@ -98,33 +109,33 @@
             <span *ngIf="isPlaylist">
                 <md-list class="playlist-scrollable">
                     <md-list-item *ngFor="let list of playlist ; let i = index" ng-click="null">
-                      <div fxFlex fxLayoutAlign="space-around center">
+                      <div fxLayoutAlign="space-around center">
 
-                        <div fxFlex="70%"  fxLayout="row" fxLayoutGap="3px" fxLayoutAlign="space-around center">
-                          <span md-line class="playlist-title"><h4 >{{i}}</h4></span>
-                          <i md-line [style.color]="'grey'" class="material-icons">drag_handle</i>
-                          <i md-line [style.color]="'#00C853'" class="material-icons">play_arrow</i>
-                          <!-- <i [style.color]="'#C62828'" class="material-icons">pause_arrow</i>                           -->
-                           <p md-line>{{ list.snippet.title }}</p>
-                        </div>
+                        <div fxFlex="21"  class="wishlist" fxLayout="row" fxLayoutGap="28%" fxLayoutAlign="center center">
+                          <span md-line><h4 >{{i+1}}</h4></span>
+            <i md-line [style.color]="'grey'" class="material-icons">reorder</i>
+            <i md-line *ngIf="isPlay" [style.color]="'#00C853'" (click)="playPause('play')" class="material-icons">play_arrow</i>
+            <i md-line *ngIf="!isPlay" [style.color]="'#C62828'" (click)="playPause('pause')" class="material-icons">pause_arrow</i>
+        </div>
+        <span fxFlex="60" fxLayoutGap="10px" fxLayoutAlign="center center" class="playlist-title">
+                             <p md-line>{{ list.snippet.title }}</p>
+                           </span>
+        <div fxLayoutAlign="end center" fxLayoutGap="1px" fxLayout="row" fxFlex="19">
+          <span md-line *ngIf="timeDuration && timeDuration.ytCurrentTime && list"><h3>{{timeDuration.ytCurrentTime}}  /</h3></span>
+          <span md-line *ngIf="list.contentDetails.duration"><h3>{{list.contentDetails.duration}}</h3></span>
+        </div>
 
-                        <div fxLayoutAlign="end center" fxLayoutGap="5px" fxLayout="row" fxFlex="20%">
-                          <span md-line *ngIf="timeDuration && timeDuration.ytCurrentTime"><h3>{{timeDuration.ytCurrentTime}}  /</h3></span>
-                          <span md-line *ngIf="list.contentDetails.duration"><h3>{{list.contentDetails.duration}}</h3></span>
-                        </div>
+        <div fxLayoutAlign="end center" fxLayoutGap="5px" fxFlex>
+          <button md-icon-button (click)="deleteSelection(list)">
+                <md-icon class="material-icons md-48">close</md-icon>
+          </button>
+        </div>
 
-                        <div fxLayoutAlign="end center" fxLayoutGap="5px" fxFlex="10%">
-                            <button md-icon-button>
-                                <md-icon class="material-icons md-48">close</md-icon>
-                            </button>
-                        </div>
-
-                      </div>
-
-                    </md-list-item>
-                </md-list>
-            </span>
-        </md-card>
+      </div>
+      </md-list-item>
+      </md-list>
+      </span>
+      </md-card>
     </div>
   </div>
 </div>
@@ -154,16 +165,4 @@
   </div>
 </div>
 </div>
-<!-- <div class="flex-container">
-    <md-card fx-flex="33">
-      <button md-button>FLAT</button>
-      <button md-raised-button>RAISED</button>
-    </md-card>
-    <md-card fx-flex="33">
-      <button md-icon-button>
-      <md-icon class="md-24">favorite</md-icon>
-    </button>
-    </md-card>
-  </div> -->
-
 </div>
