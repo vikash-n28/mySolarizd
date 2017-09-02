@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter,OnChanges } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, OnChanges } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FormControl, Validators } from '@angular/forms';
 import 'rxjs/add/operator/map';
@@ -16,7 +16,8 @@ const time_extractor = /([0-9]*H)?([0-9]*M)?([0-9]*S)?$/;
 })
 
 export class AppComponent implements OnInit {
-      results: string[];
+      results: ItemsResponse[];
+      playlist: videoObject[];
       isPlay: boolean;
       isPlaylist: boolean;
       isIframe: boolean;
@@ -25,7 +26,6 @@ export class AppComponent implements OnInit {
       previousDisable: boolean;
       nextDisable: boolean;
       playDisable: boolean;
-      playlist: string[];
       videoId: string;
 
       private player;
@@ -38,10 +38,9 @@ export class AppComponent implements OnInit {
 
       @Input() playPauseEvent
 
-
       constructor(private youtubeService: YoutubeApiService,
             private YoutubePlayer: YoutubePlayerService,
-            private sanitizer: DomSanitizer) {}
+            private sanitizer: DomSanitizer) { }
 
       //onModelChnage getting data
       searchData(dataObject): void {
@@ -90,23 +89,24 @@ export class AppComponent implements OnInit {
             var hours = parseInt(extracted[1], 10) || 0;
             var minutes = parseInt(extracted[2], 10) || 0;
             var seconds = parseInt(extracted[3], 10) || 0;
-            var sec = (seconds < 10)? '0'+ seconds: seconds;
-            var min = (minutes < 10)? '0'+minutes:minutes;
-            var durationInterval = (hours > 0)? (hours + ':' + min + ':' + sec):(min + ':' + sec);
+            var sec = (seconds < 10) ? '0' + seconds : seconds;
+            var min = (minutes < 10) ? '0' + minutes : minutes;
+            var durationInterval = (hours > 0) ? (hours + ':' + min + ':' + sec) : (min + ':' + sec);
             return durationInterval.toString();
       }
 
       // play video on selection
       selectVideo(video: any) {
             this.YoutubePlayer.playVideo(video.id, video.snippet.title);
-            if (this.playlist.length > 0) {  
-                  for(let i in this.playlist){
-                        if(video.id != this.playlist[i])
-                              this.playlist.push(video);
+            var isAvail = false;
+            if (this.playlist.length > 0) {
+                  for (let i = 0; i < this.playlist.length; ++i) {
+                        if (video.id === this.playlist[i].id)
+                              isAvail = true;    
                   }
-            }else{
-                  this.playlist.push(video);  
-            }
+            } 
+            if(!isAvail)
+            this.playlist.push(video);
             this.isPlaylist = true;
             this.isIframe = true;
             this.playDisable = false;
@@ -118,15 +118,15 @@ export class AppComponent implements OnInit {
       }
 
       // delete object from playlist on item selection
-      deleteSelection(item: any){
-          let index: number = this.playlist.indexOf(item);
-          if (index !== -1) {
-                this.playlist.splice(index, 1);
-          }
-          if(this.playlist.length < 1)
-            this.resetInitialValue()    
+      deleteSelection(item: any) {
+            let index: number = this.playlist.indexOf(item);
+            if (index !== -1) {
+                  this.playlist.splice(index, 1);
+            }
+            if (this.playlist.length < 1)
+                  this.resetInitialValue()
       }
-      
+
       // control play/pause of iframe
       playPause(event: string): void {
             event === 'play' ? this.isPlay = false : this.isPlay = true;
@@ -134,23 +134,23 @@ export class AppComponent implements OnInit {
       }
 
       previousVideo(): void {
-            if(this.playlist.length > 0) {
+            if (this.playlist.length > 0) {
                   console.log("previousVideo calling....")
             }
       }
 
       nextVideo(): void {
-            if(this.playlist.length > 0) {
+            if (this.playlist.length > 0) {
                   console.log("nextVideo calling....")
-            }  
+            }
       }
 
-      volumeSeek(event: any): void{
+      volumeSeek(event: any): void {
             this.YoutubePlayer.volumeSeek(event.volume);
             this.playerInfo();
       }
 
-      speakerClick():void {
+      speakerClick(): void {
             console.log("speakerClick calling/.....")
       }
 
@@ -166,8 +166,11 @@ export class AppComponent implements OnInit {
                         self.timeDuration = timeDuration
                         self.istimeDuration = true;
                   }
-            },1000);
-            
+            }, 1000);
+      }
+
+      listingCall(event: any): void {
+          console.log('event',event);
       }
 
       resetInitialValue(): void {
@@ -190,4 +193,13 @@ export class AppComponent implements OnInit {
 
 interface ItemsResponse {
       results: string[];
+}
+
+interface videoObject{
+      contentDetails: string[];
+      etag: string;
+      id: string;
+      kind: string;
+      snippet: string[];
+      statistics: string[];
 }

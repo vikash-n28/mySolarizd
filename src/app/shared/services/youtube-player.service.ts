@@ -88,7 +88,7 @@ export class YoutubePlayerService {
 				this.playPauseEvent.emit('pause');
 				break;
 		}
-		console.log('state',this.playPauseEvent);
+		// console.log('state',this.playPauseEvent);
 	}
 
 	playVideo(videoId: string, videoText?: string): void {

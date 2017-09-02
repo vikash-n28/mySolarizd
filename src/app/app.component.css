@@ -30,9 +30,13 @@
 
 
 md-list.make-scrollable {
-    height: 508px;
+    height: 519px;
     background-color: #EDE7F6;
     overflow-y: scroll;
+}
+
+md-list-item:hover{
+    box-shadow: 1px 1px 2px grey;
 }
 
 
