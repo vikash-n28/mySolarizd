@@ -102,14 +102,10 @@ export class YoutubePlayerService {
 		this.currentVideoText.emit(videoText);
 	}
 
-	volumeSeek(volume: number): void {
-		console.log("volume"+ volume);
+	volumeSeek(event: any): void {
 		if (!this.yt_player)
 			return;
-		console.log("volume",volume);
-		this.yt_player.setVolume(volume);
-		
-		
+		this.yt_player.setVolume(event.volume);	
 	}
 
 	pausePlayingVideo(): void {
@@ -128,6 +124,18 @@ export class YoutubePlayerService {
 	// resizePlayer(width: number, height: number) {
 	// 	this.yt_player.setSize(width, height);
 	// }
+
+    speakerClick(){
+		if(this.yt_player){
+			if(this.yt_player.isMuted()){
+				this.yt_player.unMute();
+				return true
+			}else{
+				this.yt_player.mute()
+				return false
+			}
+		}
+	}
 
 	stopCurrentVideo(): void {
 		if(this.yt_player)

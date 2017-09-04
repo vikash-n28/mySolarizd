@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import '~https://fonts.googleapis.com/icon?family=Material+Icons';
+
 @font-face {
     font-family: myraidPro;
     src: "./assets/font-family/Myriad-Pro-Light_31642.ttf";
@@ -18,11 +19,12 @@ body{
 span h3{
     font-family:myraidProSemiExtended;
     font-weight: normal;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 i{
     cursor: pointer;
+    font-weight: bold;
 }
 
 .mat-form-field-infix{
@@ -38,3 +40,4 @@ i{
 .mat-form-field-wrapper{
     padding-bottom: 0px !important;
 }
+

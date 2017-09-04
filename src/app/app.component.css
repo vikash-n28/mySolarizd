@@ -1,4 +1,6 @@
-
+md-toolbar{
+    background-color: #e62117 !important;
+}
 .youtube-control.mat-card{
     padding: 5px !important;
 }
@@ -24,19 +26,26 @@
     font-size: 18px;
 }
 
+
 .material-icons{
-    color:#673AB7;
+    color:#e62117;
 }
 
 
 md-list.make-scrollable {
     height: 519px;
-    background-color: #EDE7F6;
+    background-color: rgba(62, 62, 62, 0.50);
     overflow-y: scroll;
 }
 
-md-list-item:hover{
-    box-shadow: 1px 1px 2px grey;
+.list-hover:hover{
+    box-shadow: 2px 1px 5px #e62117;
+    background-color: rgba(230, 33, 23, 0.20);
+    color:#fff;
+}
+/* a:visited, a:active, a:focus { color:red } */
+.search-card:active, .search-card:focus, .search-card:hover{
+    box-shadow: 2px 1px  5px #e62117;
 }
 
 
@@ -46,7 +55,7 @@ md-nav-list.mat-nav-list{
 }
 
 md-card.search-card{
-    box-shadow: 2px 2px 1.5px #9E9E9E;
+    box-shadow: 2px 1px  5px rgba(62, 62, 62, 0.76);
     margin: 0px 2px 1px 0px;
 }
 
@@ -84,7 +93,7 @@ margin-top: 2px;
 
 .playlist-title{
     font-family: myraidPro;
-    font-size: 14px;
+    font-size: 15px;
     display: block;
     max-width: 100% !important;
 }
@@ -93,8 +102,8 @@ margin-top: 2px;
     font-weight: normal;
     text-overflow: inherit;
     overflow: visible;
-    margin-left: 5px;
-    white-space:inherit !important;
+    margin-left: 10px;
+    white-space:pre-line;
     word-wrap: break-word;
 }
 
@@ -112,9 +121,9 @@ margin-top: 2px;
 
 .playlist-duration h3{
     font-weight: normal;
-    text-overflow: inherit;
+    text-overflow: pre-line;
     overflow: visible;
-    margin-left: 5px;
+    margin-left: 10px;
 }
 
 
@@ -140,16 +149,22 @@ iframe{
 }
 
 .youtube-control{
+    background-color: #3e3e3e;
     height: 300px;
     margin:0px
 }
 
-.youtube-control{
-    /* margin */
+.youtube-control h3{
+    color: #fff;
 }
 
-.button-control{
-    /* margin: auto; */
+.youtube-control p{
+    color: #fff;
+}
+
+.close{
+    color:#455A64;
+    font-weight:bold; 
 }
 
 
@@ -163,7 +178,11 @@ iframe{
 
 .youtube-add-playlist h3{
     font-family:myraidProSemiExtended;
-    color:#9B27B0; 
+    color:#e62117; 
+}
+
+.playlist-duration h3{
+    color:#455A64;
 }
 
 .related-videos{
@@ -204,6 +223,6 @@ iframe{
 }
 
 .wishlist i{
-    text-overflow: inherit;
+    text-overflow: pre-line;
     font-size: 18px !important;
 }

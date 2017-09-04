@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, HostListener } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FormControl, Validators } from '@angular/forms';
 import 'rxjs/add/operator/map';
@@ -6,6 +6,10 @@ import 'rxjs/add/operator/map';
 //Services
 import { YoutubeApiService } from './shared/services/youtube-api.service';
 import { YoutubePlayerService } from './shared/services/youtube-player.service';
+
+
+//model
+import { VideoModel } from './shared/model/video';
 
 // const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const time_extractor = /([0-9]*H)?([0-9]*M)?([0-9]*S)?$/;
@@ -23,6 +27,7 @@ export class AppComponent implements OnInit {
       isIframe: boolean;
       isRelatedList: boolean;
       istimeDuration: boolean;
+      isSpeaker: boolean;
       previousDisable: boolean;
       nextDisable: boolean;
       playDisable: boolean;
@@ -37,6 +42,12 @@ export class AppComponent implements OnInit {
       private last_search: string;
 
       @Input() playPauseEvent
+
+      // @HostListener("click", ["$event"])
+      // public selectVideo(event: any): void
+      // {
+      //     event.stopPropagation();
+      // }
 
       constructor(private youtubeService: YoutubeApiService,
             private YoutubePlayer: YoutubePlayerService,
@@ -96,25 +107,36 @@ export class AppComponent implements OnInit {
       }
 
       // play video on selection
-      selectVideo(video: any) {
-            this.YoutubePlayer.playVideo(video.id, video.snippet.title);
-            var isAvail = false;
-            if (this.playlist.length > 0) {
-                  for (let i = 0; i < this.playlist.length; ++i) {
-                        if (video.id === this.playlist[i].id)
-                              isAvail = true;    
+      selectVideo(event: any, item: any) {
+            // console.log('video', event,item);
+            if (item) {
+                  var isAvail = false;
+                  event.stopPropagation();
+                  item.isPlay = true;
+                  console.log(this.currentVideo)
+                  if(!this.currentVideo){
+                        item.isPlay = false;
+                        item.timeDuration = true;
+                        this.currentVideo = item;
+                        this.YoutubePlayer.playVideo(item.id, item.snippet.title);
                   }
-            } 
-            if(!isAvail)
-            this.playlist.push(video);
-            this.isPlaylist = true;
-            this.isIframe = true;
-            this.playDisable = false;
-            this.previousDisable = false;
-            this.nextDisable = false;
-            this.isPlay = false;
-            this.currentVideo = video;
-            this.playerInfo();
+                  if (this.playlist.length > 0) {
+                        for (let i = 0; i < this.playlist.length; ++i) {
+                              if (item.id === this.playlist[i].id) {
+                                    isAvail = true;
+                              }
+                        }
+                  }
+                  if (!isAvail)
+                        this.playlist.push(item);
+                  this.isPlaylist = true;
+                  this.isIframe = true;
+                  this.playDisable = false;
+                  this.previousDisable = false;
+                  this.nextDisable = false;
+                  this.isPlay = false;
+                  this.playerInfo();
+            }
       }
 
       // delete object from playlist on item selection
@@ -128,9 +150,36 @@ export class AppComponent implements OnInit {
       }
 
       // control play/pause of iframe
-      playPause(event: string): void {
-            event === 'play' ? this.isPlay = false : this.isPlay = true;
-            event === 'pause' ? this.YoutubePlayer.pausePlayingVideo() : this.YoutubePlayer.playPausedVideo();
+      playPause(videoSelect: any, type:string): void {
+            if(videoSelect.id == this.currentVideo.id){
+                  type === 'play' ? this.isPlay = false : this.isPlay = true;
+                  type === 'pause' ? this.YoutubePlayer.pausePlayingVideo() : this.YoutubePlayer.playPausedVideo();
+                  if (this.playlist.length > 0) {
+                        for (let i = 0; i < this.playlist.length; i++) {
+                              if (this.currentVideo.id === this.playlist[i].id) {
+                                    type === 'play' ? this.playlist[i].isPlay = false : this.playlist[i].isPlay = true;
+                              }
+      
+                        }
+                  }
+            }else{
+                  if (this.playlist.length > 0) {
+                        for (let i = 0; i < this.playlist.length; i++) {
+                              if (videoSelect.id === this.playlist[i].id) {
+                                    this.playlist[i].isPlay = false;
+                                    this.playlist[i].timeDuration = true;   
+                                    this.currentVideo = videoSelect;
+                                    this.timeDuration = '';
+                                    this.YoutubePlayer.playVideo(videoSelect.id, videoSelect.snippet.title);
+                                    this.playerInfo();
+                              }else{
+                                    this.playlist[i].isPlay = true;
+                                    this.playlist[i].timeDuration = false;   
+                              }
+                        }
+                  } 
+            }
+            
       }
 
       previousVideo(): void {
@@ -146,18 +195,22 @@ export class AppComponent implements OnInit {
       }
 
       volumeSeek(event: any): void {
-            this.YoutubePlayer.volumeSeek(event.volume);
             this.playerInfo();
       }
 
       speakerClick(): void {
-            console.log("speakerClick calling/.....")
+            this.isSpeaker =  this.YoutubePlayer.speakerClick();
+            if(this.isSpeaker)
+            this.volume = this.YoutubePlayer.volume;
+            else
+            this.volume = 0;
       }
 
       // update required information of current play
       playerInfo(): void {
             var self = this;
-            this.volume = self.YoutubePlayer.volume;
+            this.volume = this.YoutubePlayer.volume;
+            this.isSpeaker = this.YoutubePlayer.speakerClick()
             setInterval(function () {
                   var progressBar = self.YoutubePlayer.updateProgressBar()
                   var timeDuration = self.YoutubePlayer.updateTimerDisplay();
@@ -167,10 +220,6 @@ export class AppComponent implements OnInit {
                         self.istimeDuration = true;
                   }
             }, 1000);
-      }
-
-      listingCall(event: any): void {
-          console.log('event',event);
       }
 
       resetInitialValue(): void {
@@ -186,6 +235,7 @@ export class AppComponent implements OnInit {
             this.playDisable = true;
             this.previousDisable = true;
             this.nextDisable = true;
+            this.isSpeaker = false;
       }
 
 
@@ -195,11 +245,13 @@ interface ItemsResponse {
       results: string[];
 }
 
-interface videoObject{
+interface videoObject {
       contentDetails: string[];
       etag: string;
       id: string;
       kind: string;
+      timeDuration: boolean;
+      isPlay: boolean;
       snippet: string[];
       statistics: string[];
 }
