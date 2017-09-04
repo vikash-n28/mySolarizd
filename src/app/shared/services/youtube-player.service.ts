@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 
 let _window: any = window;
 let time_update_interval: any;
+let interval: any;
 
 @Injectable()
 export class YoutubePlayerService {
@@ -30,7 +31,7 @@ export class YoutubePlayerService {
 	}
 
 	createPlayer() {
-		let interval = setInterval(() => {
+		interval = setInterval(() => {
 			if ((typeof _window.YT !== 'undefined') && _window.YT && _window.YT.Player) {
 				this.yt_player = new _window.YT.Player('yt-player', {
 					width: '405',
@@ -140,6 +141,7 @@ export class YoutubePlayerService {
 	stopCurrentVideo(): void {
 		if(this.yt_player)
 		this.yt_player.stopVideo();
+		clearInterval(interval);
 	}
 
 	updateTimerDisplay() {

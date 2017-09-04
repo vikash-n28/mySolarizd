@@ -45,7 +45,7 @@ md-list.make-scrollable {
 }
 /* a:visited, a:active, a:focus { color:red } */
 .search-card:active, .search-card:focus, .search-card:hover{
-    box-shadow: 2px 1px  5px #e62117;
+    box-shadow: 3px 4px 7px #e62117;
 }
 
 
@@ -55,7 +55,7 @@ md-nav-list.mat-nav-list{
 }
 
 md-card.search-card{
-    box-shadow: 2px 1px  5px rgba(62, 62, 62, 0.76);
+    box-shadow: 3px 4px 7px rgba(62, 62, 62, 0.76);
     margin: 0px 2px 1px 0px;
 }
 

@@ -7,6 +7,8 @@ import 'rxjs/add/operator/map';
 import { YoutubeApiService } from './shared/services/youtube-api.service';
 import { YoutubePlayerService } from './shared/services/youtube-player.service';
 
+import {MdSnackBar} from '@angular/material';
+
 
 //model
 import { VideoModel } from './shared/model/video';
@@ -51,6 +53,7 @@ export class AppComponent implements OnInit {
 
       constructor(private youtubeService: YoutubeApiService,
             private YoutubePlayer: YoutubePlayerService,
+            public snackBar: MdSnackBar,
             private sanitizer: DomSanitizer) { }
 
       //onModelChnage getting data
@@ -113,7 +116,9 @@ export class AppComponent implements OnInit {
                   var isAvail = false;
                   event.stopPropagation();
                   item.isPlay = true;
-                  console.log(this.currentVideo)
+                  this.snackBar.open(item.snippet.title, 'Playing', {
+                        duration: 1000,
+                  });
                   if(!this.currentVideo){
                         item.isPlay = false;
                         item.timeDuration = true;
@@ -136,6 +141,7 @@ export class AppComponent implements OnInit {
                   this.nextDisable = false;
                   this.isPlay = false;
                   this.playerInfo();
+                  console.log('video', this.playlist);
             }
       }
 
@@ -162,6 +168,9 @@ export class AppComponent implements OnInit {
       
                         }
                   }
+                  this.snackBar.open(videoSelect.snippet.title, type, {
+                        duration: 1000,
+                  });
             }else{
                   if (this.playlist.length > 0) {
                         for (let i = 0; i < this.playlist.length; i++) {
@@ -172,6 +181,9 @@ export class AppComponent implements OnInit {
                                     this.timeDuration = '';
                                     this.YoutubePlayer.playVideo(videoSelect.id, videoSelect.snippet.title);
                                     this.playerInfo();
+                                    this.snackBar.open(videoSelect.snippet.title, 'Playing', {
+                                          duration: 1000,
+                                    });
                               }else{
                                     this.playlist[i].isPlay = true;
                                     this.playlist[i].timeDuration = false;   
@@ -179,7 +191,7 @@ export class AppComponent implements OnInit {
                         }
                   } 
             }
-            
+           
       }
 
       previousVideo(): void {
@@ -195,7 +207,8 @@ export class AppComponent implements OnInit {
       }
 
       volumeSeek(event: any): void {
-            this.playerInfo();
+            this.volume = this.YoutubePlayer.volume;
+            // this.playerInfo();
       }
 
       speakerClick(): void {

@@ -17,10 +17,10 @@
 
             <md-input-container md-no-float class="search-input md-block">
               <input mdInput placeholder="Search On YouTube..." type="text" [(ngModel)]="dataSearch" (ngModelChange)="searchData(this)"
-                autocomplete="off" />
+                autocomplete="off" #action/>
             </md-input-container>
 
-            <button md-icon-button [disabled]="true"><md-icon>search</md-icon></button>
+            <button md-icon-button [disabled]="true"><md-icon mdTooltip="Search">search</md-icon></button>
 
           </md-card>
         </div>
@@ -68,20 +68,20 @@
           <div fxFlex fxLayout="row" fxLayoutAlign="start center ">
             <div fxFlex fxLayout="row" fxLayoutAlign="space-around center">
               <button md-icon-button [disabled]="previousDisable" (click)="previousVideo()">
-                    <md-icon class="material-icons md-48">skip_previous</md-icon>
+                    <md-icon mdTooltip="Previous" class="material-icons md-48">skip_previous</md-icon>
                   </button>
-              <button md-icon-button [disabled]="playDisable" *ngIf="isPlay" (click)="playPause($event,'play')">
-                    <md-icon class="material-icons md-48">play_arrow</md-icon>
+              <button md-icon-button [disabled]="playDisable" *ngIf="isPlay" (click)="playPause(currentVideo,'play')">
+                    <md-icon mdTooltip="Play" class="material-icons md-48">play_arrow</md-icon>
                   </button>
-              <button md-icon-button *ngIf="!isPlay" (click)="playPause($event,'pause')">
-                    <md-icon class="material-icons md-48">pause_arrow</md-icon>
+              <button md-icon-button *ngIf="!isPlay" (click)="playPause(currentVideo,'pause')">
+                    <md-icon mdTooltip="Pause" class="material-icons md-48">pause_arrow</md-icon>
                   </button>
               <button md-icon-button [disabled]="nextDisable" (click)="nextVideo()">
-                    <md-icon class="material-icons md-48">skip_next</md-icon>
+                    <md-icon mdTooltip="Next" class="material-icons md-48">skip_next</md-icon>
                   </button>
             </div>
             <div fxFlex fxLayout="row" fxLayoutAlign="center center">
-              <button md-icon-button (click)="speakerClick()">
+              <button mdTooltip="Speaker" md-icon-button (click)="speakerClick()">
                   <md-icon *ngIf="isSpeaker" class="md-48">volume_up</md-icon>
                   <md-icon *ngIf="!isSpeaker" class="md-48">volume_off</md-icon>
               </button>
@@ -118,12 +118,12 @@
 
                         <div fxFlex="21" fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="25px" class="wishlist">
                           <span md-line><h4 >{{i+1}}</h4></span>
-                          <i md-line [style.color]="'grey'" class="material-icons md-48">reorder</i>
+                          <i md-line mdTooltip="Drag" [style.color]="'grey'" class="material-icons md-48">reorder</i>
                             <i md-line *ngIf="list.isPlay" [style.color]="'#00C853'" (click)="playPause(list,'play'); $event.target" class="material-icons md-48">play_arrow</i>
                           <i md-line *ngIf="!list.isPlay" [style.color]="'#C62828'" (click)="playPause(list,'pause');" class="material-icons md-48">pause_arrow</i>
                         </div>
                         <span fxFlex="60" fxLayoutAlign="start center" fxLayoutGap="15px"  class="playlist-title">
-                          <p md-line>{{ list.snippet.title }}</p>
+                          <p mdTooltip="{{list.snippet.channelTitle}}" md-line>{{ list.snippet.title }}</p>
                         </span>
                         <div fxFlex="19" fxLayoutAlign="center" fxLayoutGap="1px" fxLayout="row" class="playlist-duration">
                           <span md-line *ngIf="list.timeDuration && timeDuration && timeDuration.ytCurrentTime"><h3>{{timeDuration.ytCurrentTime}}  /</h3></span>
@@ -132,7 +132,7 @@
 
                         <div fxLayoutAlign="end center" fxLayoutGap="5px" fxFlex>
                           <button md-icon-button (click)="deleteSelection(list)">
-                                <md-icon class="material-icons md-48 close">close</md-icon>
+                                <md-icon mdTooltip="Close" class="material-icons md-48 close">close</md-icon>
                           </button>
                         </div>
 
@@ -163,7 +163,7 @@
         <span *ngIf="!isRelatedList">
             <i fxLayoutAlign="center center" class="material-icons">playlist_play</i>
             </span>
-        <span *ngIf="isRelatedList">
+            <span *ngIf="isRelatedList">
               
             </span>
       </md-card>
