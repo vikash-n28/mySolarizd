@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
+import { AuthService, AppGlobals } from 'angular2-google-login';
 // import { YoutubePlayerModule } from 'ng2-youtube-player';
 //material
 import { MaterialModule,MD_PLACEHOLDER_GLOBAL_OPTIONS } from '@angular/material';

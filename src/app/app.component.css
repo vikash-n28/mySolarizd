@@ -1,3 +1,5 @@
+
+
 .container{
     position:relative
 }
@@ -47,7 +49,7 @@ md-toolbar{
 }
 
 .add-playlist-card{
-    height: 279px;
+    height: 318px;
     /* background-color: #EDE7F6; */
 }
 
@@ -66,7 +68,7 @@ md-toolbar{
 
 
 md-list.make-scrollable {
-    height: 519px;
+    height: 557px;
     background-color: rgba(62, 62, 62, 0.10);
     overflow-y: scroll;
 }
@@ -220,7 +222,7 @@ iframe{
 
 .related-videos{
     padding: 0px !important;
-    height: 289px;
+    height: 328px;
 
 }
 
@@ -235,7 +237,7 @@ iframe{
 
 .playlist-scrollable{
     overflow-y: scroll;
-    height: 258px;
+    height: 318px;
 }
 
 

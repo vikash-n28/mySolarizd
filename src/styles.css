@@ -41,3 +41,11 @@ i{
     padding-bottom: 0px !important;
 }
 
+md-toolbar-row.mat-toolbar-row {
+    height: 50px !important;
+}
+
+md-toolbar{
+    min-height: 50px !important;
+}
+
