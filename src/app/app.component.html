@@ -7,7 +7,7 @@
     </md-toolbar>
   </div>
 
-  <div class="flex-container" fxLayout fxLayout.xs="column" fxLayoutAlign="center">
+  <div class="flex-container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" class="container">
 
     <div fxFlex="30" fxFlexOffset="0px" fxFlexOffset.xs="0">
       <div fxLayout="column" fxLayoutAlign="center">
@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <div fxFlex="40" fxFlexOffset="0px" fxFlexOffset.xs="0">
+    <div fxFlex="70" fxFlexOffset="0px" fxFlexOffset.xs="0">
       <div fxLayout="column" fxLayoutGap="0px" fxLayoutAlign="center">
         <md-card fxFlex="50" class="youtube-control" fxLayout="column">
           <div fxFlex class="title-control">
@@ -105,7 +105,7 @@
         </md-card>
 
 
-        <div fxFlex="30" class="youtube-add-playlist">
+        <div flex class="youtube-add-playlist">
           <md-card class="add-playlist-card">
             <span *ngIf="!isPlaylist">
                 <h3 fxLayoutAlign="center center" class="add-playlist-title">Add tracks to your new playlist</h3>
@@ -149,7 +149,7 @@
 <div fxFlex="30" fxFlexOffset="0px" fxFlexOffset.xs="0">
   <div fxLayout="column" fxLayoutGap="0px" fxLayoutAlign="center stretch">
     <div fxFlex>
-      <md-card class="display-youtube">
+      <md-card class="display-youtube" fxLayoutAlign="center center">
         <span [hidden]="isIframe">
             <i fxLayoutAlign="center center" class="material-icons video-icon">subscriptions</i>
         </span>
@@ -161,7 +161,7 @@
     <div fxFlex>
       <md-card fxFlex class="related-videos" fxLayoutAlign="center center">
         <span *ngIf="!isRelatedList">
-            <i fxLayoutAlign="center center" class="material-icons">playlist_play</i>
+            <!-- <i fxLayoutAlign="center center" class="material-icons">playlist_play</i> -->
             </span>
             <span *ngIf="isRelatedList">
               
@@ -171,4 +171,11 @@
   </div>
 </div>
 </div>
+
+<div class="google-signIn" fxLayout fxLayoutAlign="center center">
+  <md-card fxLayoutAlign="center center" fxLayoutGap="10px" class="google-card">
+    <img src="../assets/icons8-Google.svg" height="40px" width="40px"/>
+    <h3 fxLayoutAlign="center">Sign in with Google</h3>
+  </md-card>
+  <!-- <button md-fab [color]="'warn'">V</button> -->
 </div>

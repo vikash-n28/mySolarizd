@@ -35,7 +35,7 @@ export class YoutubePlayerService {
 			if ((typeof _window.YT !== 'undefined') && _window.YT && _window.YT.Player) {
 				this.yt_player = new _window.YT.Player('yt-player', {
 					width: '405',
-					height: '295',
+					height: '300',
 					playerVars: {
 						color: 'white',
 						iv_load_policy: '3',

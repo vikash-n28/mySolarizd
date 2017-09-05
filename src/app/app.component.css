@@ -1,3 +1,36 @@
+.container{
+    position:relative
+}
+.google-signIn{
+    position:absolute;
+    bottom:0;
+    right:0;
+    margin-bottom: 1%;
+    /* border-radius: 50%; */
+}
+
+.google-card{
+    box-shadow: 2px 2px 5px #e62117 !important;
+    padding: 10px;
+    cursor: pointer;
+    color:#455A64;
+    background-color: rgba(241, 30, 19, 0.1);
+    text-align: center;
+    font-family: myraidPro;
+    max-width: 75%;
+}
+
+.google-card h3{
+    margin: 0px;
+    font-size: 16px;
+    font-weight: 100;
+}
+
+.app-card{
+   border-radius: 45%;
+   height: max-content;
+}
+
 md-toolbar{
     background-color: #e62117 !important;
 }
@@ -34,18 +67,18 @@ md-toolbar{
 
 md-list.make-scrollable {
     height: 519px;
-    background-color: rgba(62, 62, 62, 0.50);
+    background-color: rgba(62, 62, 62, 0.10);
     overflow-y: scroll;
 }
 
 .list-hover:hover{
     box-shadow: 2px 1px 5px #e62117;
     background-color: rgba(230, 33, 23, 0.20);
-    color:#fff;
+    color:#e62117;
 }
 /* a:visited, a:active, a:focus { color:red } */
 .search-card:active, .search-card:focus, .search-card:hover{
-    box-shadow: 3px 4px 7px #e62117;
+    box-shadow: 1px 2px 5px #e62117;
 }
 
 
@@ -55,8 +88,8 @@ md-nav-list.mat-nav-list{
 }
 
 md-card.search-card{
-    box-shadow: 3px 4px 7px rgba(62, 62, 62, 0.76);
-    margin: 0px 2px 1px 0px;
+    box-shadow: 1px 2px 5px rgba(62, 62, 62, 0.76);
+    margin: 0px 1px 1px 0px;
 }
 
 .playlist{
@@ -133,6 +166,9 @@ margin-top: 2px;
 
 .display-youtube{
     padding: 0px !important;
+    width:99.9%;
+    height: 300px;
+    background-color: #EDE7F6;
 }   
 
 iframe{
@@ -142,10 +178,7 @@ iframe{
 
 .video-icon{
     font-size: 100px;
-    /* color: #b0bec5; */
-    width:99.9%;
-    height: 300px;
-    background-color: #EDE7F6;
+    /* color: #b0bec5; */  
 }
 
 .youtube-control{
@@ -187,7 +220,7 @@ iframe{
 
 .related-videos{
     padding: 0px !important;
-    height: 290px;
+    height: 289px;
 
 }
 

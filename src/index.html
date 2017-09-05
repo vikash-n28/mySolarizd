@@ -6,17 +6,20 @@
   <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-signin-client_id" content="93547708661-j3ndsutofjvaf3ngj66bjfjlht7kvng5.apps.googleusercontent.com">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <script >
+</head>
+<script >
 		var tag = document.createElement('script');
 		tag.src = "https://www.youtube.com/iframe_api";
 		tag.id  = "yt-player-script";
 		var firstScriptTag = document.getElementsByTagName('script')[0];
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
   </script>
-</head>
 <body>
   <app-root></app-root>
 </body>
+
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 </html>

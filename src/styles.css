@@ -23,7 +23,7 @@ span h3{
 }
 
 i{
-    cursor: pointer;
+    /* cursor: pointer; */
     font-weight: bold;
 }
 
