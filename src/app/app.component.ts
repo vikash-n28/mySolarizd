@@ -1,20 +1,103 @@
-import { Component, OnInit, Input, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, AfterViewInit, ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FormControl, Validators } from '@angular/forms';
+import { AuthService, AppGlobals } from 'angular2-google-login';
 import 'rxjs/add/operator/map';
 
 //Services
 import { YoutubeApiService } from './shared/services/youtube-api.service';
 import { YoutubePlayerService } from './shared/services/youtube-player.service';
 
-import {MdSnackBar} from '@angular/material';
+import { MdSnackBar } from '@angular/material';
 
 
 //model
 import { VideoModel } from './shared/model/video';
 
 // const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
 const time_extractor = /([0-9]*H)?([0-9]*M)?([0-9]*S)?$/;
+declare const gapi: any;
+
+
+
+@Component({
+      selector: 'google-signin',
+      templateUrl: './googleSignIn.component.html',
+      styleUrls: ['./app.component.css']
+})
+export class GoogleSigninComponent implements AfterViewInit {
+      public isSignIn: boolean = true;
+      public profile;
+      private clientId: string = '93547708661-j3ndsutofjvaf3ngj66bjfjlht7kvng5.apps.googleusercontent.com';
+      private scope = [
+            'profile',
+            'email',
+            'https://www.googleapis.com/auth/plus.me',
+            'https://www.googleapis.com/auth/contacts.readonly',
+            'https://www.googleapis.com/auth/admin.directory.user.readonly'
+      ].join(' ');
+      public auth2: any;
+      constructor(private element: ElementRef) {
+            console.log('ElementRef: ', this.element);
+      }
+
+      public googleInit() {
+            let that = this;
+                  gapi.load('auth2', function () {
+                        that.auth2 = gapi.auth2.init({
+                              client_id: that.clientId,
+                              cookiepolicy: 'single_host_origin',
+                              response_type: 'id_token permission',
+                              scope: that.scope
+                        });
+                        that.attachSignin(that.element.nativeElement.firstChild);
+                  });  
+      }
+
+      public attachSignin(element) {
+            let that = this;
+            this.auth2.attachClickHandler(element, {},
+                  function (googleUser) {
+                        if (!that.profile) {
+                              that.profile = googleUser.getBasicProfile();
+                              // console.log('Token || ' + googleUser.getAuthResponse().id_token);
+                              // console.log('ID: ' + that.profile.getId());
+                              // console.log('Name: ' + that.profile.getName());
+                              // console.log('Image URL: ' + that.profile.getImageUrl());
+                              // console.log('Email: ' + that.profile.getEmail());
+                              //YOUR CODE HERE
+                              localStorage.setItem('token', googleUser);
+                              localStorage.setItem('id_token', googleUser.getAuthResponse().id_token);
+                              localStorage.setItem('profile', JSON.stringify(that.profile));
+                              console.log("localStorage",localStorage);
+                              (that.isSignIn) ? that.isSignIn = false : that.isSignIn = true;
+                        } else {
+                              var auth2 = gapi.auth2.getAuthInstance();
+                              auth2.signOut().then(function () {
+                                    console.log('User signed out.');
+                                      localStorage.removeItem('token');
+                                      localStorage.removeItem('id_token');
+                                      localStorage.removeItem('profile');
+                                      console.log('localStorage',localStorage);
+                                      
+                              });
+                              gapi.auth2.getAuthInstance().disconnect();
+                              (that.isSignIn) ? that.isSignIn = false : that.isSignIn = true;
+                        }
+
+
+                  }, function (error) {
+                        console.log(JSON.stringify(error, undefined, 2));
+                  });
+                  
+      }
+
+      ngAfterViewInit() {
+             this.googleInit();
+      }
+}
+
 @Component({
       selector: 'app-root',
       templateUrl: './app.component.html',
@@ -35,6 +118,7 @@ export class AppComponent implements OnInit {
       playDisable: boolean;
       videoId: string;
 
+
       private player;
       private ytEvent;
       public currentVideo;
@@ -42,6 +126,7 @@ export class AppComponent implements OnInit {
       public timeDuration;
       public volume;
       private last_search: string;
+      public auth2: any;
 
       @Input() playPauseEvent
 
@@ -54,7 +139,9 @@ export class AppComponent implements OnInit {
       constructor(private youtubeService: YoutubeApiService,
             private YoutubePlayer: YoutubePlayerService,
             public snackBar: MdSnackBar,
-            private sanitizer: DomSanitizer) { }
+            private sanitizer: DomSanitizer) {
+      }
+
 
       //onModelChnage getting data
       searchData(dataObject): void {
@@ -79,6 +166,7 @@ export class AppComponent implements OnInit {
 
       ngOnInit(): void {
             this.resetInitialValue();
+            AppGlobals.GOOGLE_CLIENT_ID = '93547708661-j3ndsutofjvaf3ngj66bjfjlht7kvng5';
             this.youtubeService.searchVideos('')
                   .then(data => {
                         if (data) {
@@ -116,29 +204,33 @@ export class AppComponent implements OnInit {
                   var isAvail = false;
                   event.stopPropagation();
                   item.isPlay = true;
-                  this.snackBar.open(item.snippet.title, 'Playing', {
-                        duration: 1000,
-                  });
-                  if(!this.currentVideo){
+                  if (!this.currentVideo) {
                         item.isPlay = false;
                         item.timeDuration = true;
                         this.currentVideo = item;
                         this.YoutubePlayer.playVideo(item.id, item.snippet.title);
                   }
                   if (this.playlist.length > 0) {
+                        this.nextDisable = false;
                         for (let i = 0; i < this.playlist.length; ++i) {
                               if (item.id === this.playlist[i].id) {
                                     isAvail = true;
                               }
                         }
                   }
-                  if (!isAvail)
+                  if (!isAvail){
                         this.playlist.push(item);
+                        this.snackBar.open(item.snippet.title, 'Added', {
+                              duration: 1000,
+                        });
+                  }else{
+                        this.snackBar.open(item.snippet.title, 'Already Added', {
+                              duration: 1000,
+                        });  
+                  }   
                   this.isPlaylist = true;
                   this.isIframe = true;
                   this.playDisable = false;
-                  this.previousDisable = false;
-                  this.nextDisable = false;
                   this.isPlay = false;
                   this.playerInfo();
                   console.log('video', this.playlist);
@@ -156,8 +248,8 @@ export class AppComponent implements OnInit {
       }
 
       // control play/pause of iframe
-      playPause(videoSelect: any, type:string): void {
-            if(videoSelect.id == this.currentVideo.id){
+      playPause(videoSelect: any, type: string): void {
+            if (videoSelect.id == this.currentVideo.id) {
                   type === 'play' ? this.isPlay = false : this.isPlay = true;
                   type === 'pause' ? this.YoutubePlayer.pausePlayingVideo() : this.YoutubePlayer.playPausedVideo();
                   if (this.playlist.length > 0) {
@@ -165,44 +257,61 @@ export class AppComponent implements OnInit {
                               if (this.currentVideo.id === this.playlist[i].id) {
                                     type === 'play' ? this.playlist[i].isPlay = false : this.playlist[i].isPlay = true;
                               }
-      
+
                         }
                   }
                   this.snackBar.open(videoSelect.snippet.title, type, {
                         duration: 1000,
                   });
-            }else{
+            } else {
                   if (this.playlist.length > 0) {
-                        for (let i = 0; i < this.playlist.length; i++) {
-                              if (videoSelect.id === this.playlist[i].id) {
-                                    this.playlist[i].isPlay = false;
-                                    this.playlist[i].timeDuration = true;   
-                                    this.currentVideo = videoSelect;
-                                    this.timeDuration = '';
-                                    this.YoutubePlayer.playVideo(videoSelect.id, videoSelect.snippet.title);
-                                    this.playerInfo();
-                                    this.snackBar.open(videoSelect.snippet.title, 'Playing', {
-                                          duration: 1000,
-                                    });
-                              }else{
-                                    this.playlist[i].isPlay = true;
-                                    this.playlist[i].timeDuration = false;   
-                              }
-                        }
-                  } 
+                        this.resetPlayList(videoSelect);
+                  }
+            }
+
+      }
+
+      resetPlayList(video){
+            for (let i = 0; i < this.playlist.length; i++) {
+                  if (video.id === this.playlist[i].id) {
+                        this.playlist[i].isPlay = false;
+                        this.playlist[i].timeDuration = true;
+                        this.currentVideo = video;
+                        this.timeDuration = '';
+                        this.YoutubePlayer.playVideo(video.id, video.snippet.title);
+                        this.playerInfo();
+                        this.snackBar.open(video.snippet.title, 'Playing', {
+                              duration: 1000,
+                        });
+                  } else {
+                        this.playlist[i].isPlay = true;
+                        this.playlist[i].timeDuration = false;
+                  }
+            } 
+      }
+
+      previousVideo(): void {
+            var videoIndex = this.playlist.indexOf(this.currentVideo)
+            if(videoIndex == 0)
+                  this.previousDisable = true;
+            if(videoIndex > this.playlist.length)
+                  this.nextDisable = false;  
+            if (videoIndex > 0) {
+                  this.resetPlayList(this.playlist[videoIndex-1]);
             }
            
       }
 
-      previousVideo(): void {
-            if (this.playlist.length > 0) {
-                  console.log("previousVideo calling....")
-            }
-      }
-
       nextVideo(): void {
+            var videoIndex = this.playlist.indexOf(this.currentVideo)
             if (this.playlist.length > 0) {
-                  console.log("nextVideo calling....")
+                  if(videoIndex == this.playlist.length-1)
+                        this.nextDisable = true;
+                  if(videoIndex > 0)
+                        this.previousDisable = false;
+                  if(videoIndex <= this.playlist.length-1){
+                        this.resetPlayList(this.playlist[videoIndex+1]);
+                  }
             }
       }
 
@@ -212,11 +321,11 @@ export class AppComponent implements OnInit {
       }
 
       speakerClick(): void {
-            this.isSpeaker =  this.YoutubePlayer.speakerClick();
-            if(this.isSpeaker)
-            this.volume = this.YoutubePlayer.volume;
+            this.isSpeaker = this.YoutubePlayer.speakerClick();
+            if (this.isSpeaker)
+                  this.volume = this.YoutubePlayer.volume;
             else
-            this.volume = 0;
+                  this.volume = 0;
       }
 
       // update required information of current play
@@ -268,3 +377,5 @@ interface videoObject {
       snippet: string[];
       statistics: string[];
 }
+
+

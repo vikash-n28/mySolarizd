@@ -184,7 +184,7 @@ iframe{
 }
 
 .youtube-control{
-    background-color: #3e3e3e;
+    background-color: rgba(33, 6, 6, 0.42);
     height: 300px;
     margin:0px
 }
